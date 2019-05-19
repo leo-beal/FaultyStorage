@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     int sockfd;
     char buffer[MAXLINE];
     //Needs to be converted to c string
-    std::string what("Whello");
+    std::string what("Wtest.txt000000000000000000000000000000000000000");
     struct sockaddr_in serv;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
