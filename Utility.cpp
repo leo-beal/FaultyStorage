@@ -2,7 +2,7 @@
 
 
 
-unsigned char* util::createWrite(const std::string &file, const unsigned int &loc, const unsigned short &len, char *data) {
+unsigned char* util::createWrite(const std::string &file, const unsigned int &loc, const unsigned short &len, const char *data) {
     unsigned char* msg = new unsigned char[W_LEN];
 
     //Set first byte to W (Write) opcode
@@ -10,7 +10,7 @@ unsigned char* util::createWrite(const std::string &file, const unsigned int &lo
 
     //Set bytes 1 - 32 to the file to write to
     for (int x = 0; x < 32; x++){
-        if(file.size() < x){
+        if(file.size() > x){
             msg[x + 1] = file.at(x);
         }
         else{

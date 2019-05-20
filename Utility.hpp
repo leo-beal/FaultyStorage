@@ -10,7 +10,7 @@
 #define A_LEN 49
 
 namespace util{
-    unsigned char* createWrite(const std::string& file, const unsigned int& loc, const unsigned short& len, char* data);
+    unsigned char* createWrite(const std::string& file, const unsigned int& loc, const unsigned short& len, const char* data);
 
     bool validWrite (char* ack);
 
