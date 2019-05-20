@@ -9,6 +9,8 @@
 #include <netinet/in.h>
 #include <cstring>
 
+#include "Utility.hpp"
+
 #define PORT_OUT 1982
 #define PORT_IN 1983
 #define MAXLINE 1024
