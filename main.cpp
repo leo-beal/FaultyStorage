@@ -9,6 +9,9 @@
 #include <netinet/in.h>
 #include <cstring>
 
+//set this to only import on windows. Use unistd on linux.
+#include <windows.h>
+
 #include "Utility.hpp"
 
 #define PORT_OUT 1982
@@ -19,7 +22,7 @@ int main(int argc, char* argv[]) {
     int sockfd;
     char buffer[MAXLINE];
     //Needs to be converted to c string
-    std::string what("Wtest.txt000000000000000000000000000000000000000");
+    std::string what("ur mom gay");
     struct sockaddr_in serv;
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -31,7 +34,12 @@ int main(int argc, char* argv[]) {
 
     int n, len;
 
-    sendto(sockfd, what.c_str(), strlen(what.c_str()), 0, (const struct sockaddr *) &serv, sizeof(serv));
+    auto toSend = util::createWrite("test.txt", 10, 10, what.c_str());
+
+    //ABSTRACT THIS PLEASE I BEG YOU. toSend and its lengths have to absolutely match 5000%.
+    sendto(sockfd, toSend, W_LEN, 0, (const struct sockaddr *) &serv, sizeof(serv));
+
+    sleep(5);
 
     close(sockfd);
 
