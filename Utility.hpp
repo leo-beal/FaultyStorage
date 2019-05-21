@@ -22,8 +22,13 @@
 
 #define MAXLINE 1024
 
+
+
 namespace util{
+
     void init();
+
+    void end();
 
     unsigned char* createWrite(const std::string& file, const unsigned int& loc, const unsigned short& len, const char* data);
 
@@ -33,9 +38,9 @@ namespace util{
 
     bool parseRead(char* data);
 
-    void sendUDP(std::string IP, const unsigned char* data);
+    void sendUDP(const unsigned char* data);
 
-    unsigned char* getUDP(std::string IP, int& ret);
+    unsigned char* getUDP(int& ret);
 }
 
 #endif //FAULTYDISK_UTILITY_HPP

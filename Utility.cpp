@@ -1,6 +1,48 @@
 #include "Utility.hpp"
 
+int sockofd;
+int sockifd;
+struct sockaddr_in servoaddr;
+struct sockaddr_in serviaddr;
 
+void util::init(){
+    // Creating socket file descriptor for output
+    //if ( (sockofd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+    //    perror("socket creation failed");
+    //    exit(EXIT_FAILURE);
+    //}
+
+    // Creating socket file descriptor for input
+    if ( (sockifd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    //memset(&servoaddr, 0, sizeof(servoaddr));
+    //memset(&serviaddr, 0, sizeof(serviaddr));
+
+    // Filling server information
+    servoaddr.sin_family = AF_INET;
+    servoaddr.sin_port = htons(PORT_OUT);
+    servoaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    serviaddr.sin_family = AF_INET;
+    serviaddr.sin_port = htons(PORT_IN);
+    serviaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    if (bind(sockifd, (struct sockaddr *)&serviaddr, sizeof(serviaddr)) < 0) {
+        perror("bind failed");
+        close(sockifd);
+        goto breakFunc;
+    }
+
+    breakFunc:;
+}
+
+void util::end(){
+    //close(sockofd);
+    close(sockifd);
+}
 
 unsigned char* util::createWrite(const std::string &file, const unsigned int &loc, const unsigned short &len, const char *data) {
     unsigned char* msg = new unsigned char[W_LEN];
@@ -44,62 +86,32 @@ bool util::parseRead(char *data) {
 
 }
 
-void util::sendUDP(std::string IP, const unsigned char *data) {
-    int sockfd;
-    struct sockaddr_in serv;
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-
-    memset(&serv, 0, sizeof(serv));
-
-    serv.sin_family = AF_INET;
-    serv.sin_port = htons(PORT_OUT);
-    serv.sin_addr.s_addr = inet_addr(IP.c_str());
+void util::sendUDP(const unsigned char *data) {
 
     //ABSTRACT THIS PLEASE I BEG YOU. toSend and its lengths have to absolutely match 5000%
     if(data[0] == 'W' || data[0] == 'w') {
-        sendto(sockfd, data, W_LEN, 0, (const struct sockaddr *) &serv, sizeof(serv));
+        sendto(sockifd, data, W_LEN, 0, (const struct sockaddr *) &servoaddr, sizeof(servoaddr));
     }
     if(data[0] == 'R' || data[0] == 'r') {
-        sendto(sockfd, data, R_LEN, 0, (const struct sockaddr *) &serv, sizeof(serv));
+        sendto(sockifd, data, R_LEN, 0, (const struct sockaddr *) &servoaddr, sizeof(servoaddr));
     }
-
-    close(sockfd);
 }
 
-unsigned char* util::getUDP(std::string IP, int& ret) {
-    int sockfd;
+unsigned char* util::getUDP(int& ret) {
     unsigned char buffer[MAXLINE];
     unsigned char* retVal;
-    struct sockaddr_in servaddr;
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-    memset(&servaddr, 0, sizeof(servaddr));
-
-    // Filling server information
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(PORT_IN);
-    servaddr.sin_addr.s_addr = inet_addr(IP.c_str());
-
-    int len;
     ssize_t n;
 
-    if(bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0){
-        perror("bind");
-        exit(1);
-    }
-
-    n = recvfrom(sockfd, (unsigned char *)buffer, MAXLINE,
-                 MSG_WAITALL, (struct sockaddr *) &servaddr,
-                 &len);
+    n = recv(sockifd, (unsigned char *)buffer, MAXLINE,
+                 0);
     buffer[n] = '\0';
 
     ret = n;
 
-    std::cout << n << std::endl;
+    std::cout << n << buffer[48] <<std::endl;
 
     //std::cout << "Got message: " << buffer[0] << std::endl;
-
-    close(sockfd);
 
     if(buffer[0] == 'A' || buffer[0] == 'a'){
         retVal = new unsigned char[A_LEN];
@@ -110,6 +122,6 @@ unsigned char* util::getUDP(std::string IP, int& ret) {
         memcpy(retVal, buffer, D_LEN);
     }
 
-    close(sockfd);
+    return retVal;
 }
 
