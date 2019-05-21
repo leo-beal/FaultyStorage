@@ -8,40 +8,40 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <cstring>
+#include <thread>
+#include <vector>
+#include <memory>
 
 //set this to only import on windows. Use unistd on linux.
 #include <windows.h>
 
 #include "Utility.hpp"
 
-#define PORT_OUT 1982
-#define PORT_IN 1983
-#define MAXLINE 1024
+void getUDP(){
+    int ret = 0;
+    unsigned char* test;
+    while(ret <= 0) {
+        test = util::getUDP("127.0.0.1", ret);
+        //std::cout << sizeof(test) << " " << std::hex << test[sizeof(test - 1)] << std::endl;
+        //sleep(1);
+    }
+}
 
 int main(int argc, char* argv[]) {
-    int sockfd;
-    char buffer[MAXLINE];
     //Needs to be converted to c string
     std::string what("ur mom gay");
-    struct sockaddr_in serv;
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-    memset(&serv, 0, sizeof(serv));
+    auto msg = util::createWrite("test.txt", 0, 10, what.c_str());
 
-    serv.sin_family = AF_INET;
-    serv.sin_port = htons(PORT_OUT);
-    serv.sin_addr.s_addr = inet_addr("127.0.0.1");
+    //util::sendUDP("127.0.0.1", msg);
 
-    int n, len;
+    //auto t1 = std::make_shared<std::thread>(getUDP);
+    auto t2 = std::make_shared<std::thread>(util::sendUDP, "127.0.0.1", msg);
 
-    auto toSend = util::createWrite("test.txt", 10, 10, what.c_str());
+    t2->join();
+    //t1->join();
 
-    //ABSTRACT THIS PLEASE I BEG YOU. toSend and its lengths have to absolutely match 5000%.
-    sendto(sockfd, toSend, W_LEN, 0, (const struct sockaddr *) &serv, sizeof(serv));
 
-    sleep(5);
-
-    close(sockfd);
 
     return 0;
 }
