@@ -3,13 +3,28 @@
 
 #include <string>
 #include <cstring>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 
 #define R_LEN 37
 #define D_LEN 49
 #define W_LEN 48
 #define A_LEN 49
 
+#define PORT_OUT 1982
+#define PORT_IN 1983
+
+#define MAXLINE 1024
+
 namespace util{
+    void init();
+
     unsigned char* createWrite(const std::string& file, const unsigned int& loc, const unsigned short& len, const char* data);
 
     bool validWrite (char* ack);
@@ -17,6 +32,10 @@ namespace util{
     unsigned char* createRead(const std::string& file, const int& loc);
 
     bool parseRead(char* data);
+
+    void sendUDP(std::string IP, const unsigned char* data);
+
+    unsigned char* getUDP(std::string IP, int& ret);
 }
 
 #endif //FAULTYDISK_UTILITY_HPP
