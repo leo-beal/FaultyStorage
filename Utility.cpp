@@ -75,15 +75,46 @@ unsigned char* util::createWrite(const std::string &file, const unsigned int &lo
 unsigned char* util::createRead(const std::string &file, const int &loc) {
     unsigned char* msg = new unsigned char[R_LEN];
 
+    //Set first byte to R (Read) opcode
+    msg[0] = 'R';
+
+    //Set bytes 1 - 32 to the file to read from
+    for (int x = 0; x < 32; x++){
+        if(file.size() > x){
+            msg[x + 1] = file.at(x);
+        }
+        else{
+            msg[x + 1] = 0;
+        }
+    }
+
+    //Set bytes 33-36 to the location
+    memcpy(msg + 33, (unsigned char *)&(loc), sizeof(loc));
+
     return msg;
 }
 
 bool util::validWrite(char *ack) {
-
+    if(ack[A_LEN - 1] == 0){
+        return false;
+    }else{
+        return true;
+    }
 }
 
-bool util::parseRead(char *data) {
-
+bool util::parseRead(char *data, char* &parsed, short& length) {
+    if(data[D_LEN - 1] == 0){
+        return false;
+    }else{
+        short len = data[37];
+        parsed = new char[len];
+        for (int x = 0; x < len; x++){
+            parsed[x] = data[x + 38];
+        }
+        //memcpy(parsed, data + 38, len);
+        length = len;
+        return true;
+    }
 }
 
 void util::sendUDP(const unsigned char *data) {

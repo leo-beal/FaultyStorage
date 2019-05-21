@@ -36,7 +36,7 @@ namespace util{
 
     unsigned char* createRead(const std::string& file, const int& loc);
 
-    bool parseRead(char* data);
+    bool parseRead(char* data, char* &parsed, short& length);
 
     void sendUDP(const unsigned char* data);
 
