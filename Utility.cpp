@@ -66,7 +66,7 @@ unsigned char* util::createWrite(const std::string &file, const unsigned int &lo
     //Set byte 37 to the data length
     msg[37] = len;
 
-    //Set bytes 38-47 to the data (Assume zero padded at the end)
+    //Set bytes 38-47 to the data (no ending zero padding needed)
     memcpy(msg + 38, data, static_cast<size_t>(len));
 
     return msg;
