@@ -20,15 +20,16 @@
 
 int main(int argc, char* argv[]) {
     //Needs to be converted to c string
-    std::string what("ur mom gay");
+    std::string what("ur mom ga");
 
     int ret;
 
     util::init();
 
-    auto msg = util::createWrite("test.txt", 0, 10, what.c_str());
+    auto msg = util::createWrite("test.txt", 0, 9, what.c_str());
 
-    auto rd = util::createRead("test.txt", 0);
+    //end of file
+    auto rd = util::createRead("test.txt", 10);
 
     unsigned char* data;
 
