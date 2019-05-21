@@ -119,7 +119,6 @@ bool util::parseRead(char *data, char* &parsed, short& length) {
 
 void util::sendUDP(const unsigned char *data) {
 
-    //ABSTRACT THIS PLEASE I BEG YOU. toSend and its lengths have to absolutely match 5000%
     if(data[0] == 'W' || data[0] == 'w') {
         sendto(sockifd, data, W_LEN, 0, (const struct sockaddr *) &servoaddr, sizeof(servoaddr));
     }
@@ -154,5 +153,33 @@ unsigned char* util::getUDP(int& ret) {
     }
 
     return retVal;
+}
+
+char* util::readBlock(const std::string& path, int& segs, int& remLen) {
+    std::streampos size;
+    char* block;
+    remLen = 0;
+
+    std::ifstream fileIn (path, std::ios::in | std::ios::binary | std::ios::ate);
+    if(fileIn.is_open()){
+        size = fileIn.tellg();
+        block = new char[size];
+        fileIn.seekg (0, std::ios::beg);
+        fileIn.read (block, size);
+        fileIn.close();
+    }
+    else{
+        std::cout << "Unable to open file" << std::endl;
+        return nullptr;
+    }
+
+    long temp = size / 10;
+    if(size % 10 > 0){
+        temp += 1;
+        remLen = size%10;
+    }
+    segs = temp;
+
+    return block;
 }
 

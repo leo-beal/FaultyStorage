@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <fstream>
 
 #define R_LEN 37
 #define D_LEN 49
@@ -41,6 +42,8 @@ namespace util{
     void sendUDP(const unsigned char* data);
 
     unsigned char* getUDP(int& ret);
+
+    char* readBlock(const std::string& path, int& segs, int& remLen);
 }
 
 #endif //FAULTYDISK_UTILITY_HPP
