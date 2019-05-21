@@ -16,6 +16,7 @@
 #include <windows.h>
 
 #include "Utility.hpp"
+#include "Algorithms.hpp"
 
 int main(int argc, char* argv[]) {
     //Needs to be converted to c string

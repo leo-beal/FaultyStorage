@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Utility.hpp"
+#include "Algorithms.hpp"
 
 int main(){
     int sockfd;

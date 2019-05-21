@@ -182,4 +182,3 @@ char* util::readBlock(const std::string& path, int& segs, int& remLen) {
 
     return block;
 }
-
