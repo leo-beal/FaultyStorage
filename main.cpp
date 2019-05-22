@@ -18,46 +18,65 @@
 #include "Utility.hpp"
 #include "Algorithms.hpp"
 
-int main(int argc, char* argv[]) {
-    //Needs to be converted to c string
-    std::string what("ur mom ga");
+int numFiles;
+std::vector<std::string> files;
 
-    int ret;
+void sendFiles(char* memBlock, int segs, int lenRem){
+    std::vector<char*> data = algo::vectorize(memBlock, segs, lenRem);
+    for(int x = 0; x < numFiles; x++){
+        files.push_back("file_" + std::to_string(x) + ".txt");
+    }
+    for(int x = 0; x < numFiles; x++){
+        unsigned char* toSend;
+        unsigned char* ack;
+        for(int y = 0; y < data.size() - 1; y++){
+            toSend = util::createWrite(files[x], y * 10, 10, data[y]);
+            do{
+                int ret;
+                util::sendUDP(toSend);
+                ack = util::getUDP(ret);
+            }while(!util::validWrite((char*)ack));
+        }
+        if(lenRem > 0){
+            toSend = util::createWrite(files[x], (data.size() - 1) * 10, lenRem, data[data.size() - 1]);
+        }else{
+            toSend = util::createWrite(files[x], (data.size() - 1) * 10, 10, data[data.size() - 1]);
+        }
+        do{
+            int ret;
+            util::sendUDP(toSend);
+            ack = util::getUDP(ret);
+        }while(!util::validWrite((char*)ack));
+        delete ack;
+    }
+}
+
+int main(int argc, char* argv[]) {
 
     util::init();
 
-    auto msg = util::createWrite("test.txt", 0, 9, what.c_str());
+    char* file;
+    int segs;
+    int lenRem;
+    int size;
+    int wait;
+    std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
+    std::string writeTo;
 
-    //end of file
-    auto rd = util::createRead("test.txt", 10);
+    numFiles = 3;
 
-    unsigned char* data;
+    file = util::readBlock(readFrom, segs, lenRem);
 
-    char* parsed;
+    size = segs * 10 + lenRem;
 
-    short len;
+    if(lenRem > 0) {
+        size -= 10;
+    }
 
-    //util::sendUDP("127.0.0.1", msg);
-
-    //auto t1 = std::make_shared<std::thread>(getUDP);
-    //auto t2 = std::make_shared<std::thread>(util::sendUDP, "127.0.0.1", msg);
-
-    //t2->join();
-    //t1->join();
-
-    util::sendUDP(msg);
-
-    util::getUDP(ret);
-
-    util::sendUDP(rd);
-
-    data = util::getUDP(ret);
-
-    util::parseRead((char*)data, parsed, len);
-
-    std::cout << parsed << " " << len << " " << strlen(parsed) << std::endl;
+    sendFiles(file, segs, lenRem);
 
     util::end();
+
 
     return 0;
 }
