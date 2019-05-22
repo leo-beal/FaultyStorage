@@ -26,17 +26,22 @@ void sendFiles(char* memBlock, int segs, int lenRem){
     for(int x = 0; x < numFiles; x++){
         files.push_back("file_" + std::to_string(x));
     }
-    for(int x = 0; x < numFiles; x++){
+    for(int x = 0; x < data.size() - 1; x++){
         unsigned char* toSend;
         unsigned char* ack;
-        for(int y = 0; y < data.size() - 1; y++){
-            toSend = util::createWrite(files[x], y * 10, 10, data[y]);
+        for(int y = 0; y < numFiles; y++){
+            toSend = util::createWrite(files[y], x * 10, 10, data[x]);
             do{
                 int ret;
                 util::sendUDP(toSend);
                 ack = util::getUDP(ret);
             }while(!util::validWrite((char*)ack));
         }
+    }
+
+    for(int x = 0; x < numFiles; x++){
+        unsigned char* toSend;
+        unsigned char* ack;
         if(lenRem > 0){
             toSend = util::createWrite(files[x], (data.size() - 1) * 10, lenRem, data[data.size() - 1]);
         }else{
