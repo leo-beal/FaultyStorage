@@ -24,7 +24,7 @@ std::vector<std::string> files;
 void sendFiles(char* memBlock, int segs, int lenRem){
     std::vector<char*> data = algo::vectorize(memBlock, segs, lenRem);
     for(int x = 0; x < numFiles; x++){
-        files.push_back("file_" + std::to_string(x) + ".txt");
+        files.push_back("file_" + std::to_string(x));
     }
     for(int x = 0; x < numFiles; x++){
         unsigned char* toSend;
