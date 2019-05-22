@@ -6,27 +6,29 @@
 
 int main(){
 
-    std::string t1 = "aaaaaaaaaa";
-    std::string t2 = "aaaaaaaaaa";
-    std::string t3 = "aaaaaaaaaa";
+    char* mem;
+    int segs;
+    int remLen;
 
-    //char* t3prime = (char*)t3.c_str();
-    //t3prime[7] = 0;
-    //t3 = t3prime;
+    std::vector<char*> chunks;
 
-    std::vector<unsigned char*> test;
+    mem = util::readBlock("D:\\cs\\cs6890\\FaultyDisk\\TestData\\LargeTextFile.txt", segs, remLen);
 
-    test.push_back((unsigned char*)t1.c_str());
-    test.push_back((unsigned char*)t2.c_str());
-    test.push_back((unsigned char*)t3.c_str());
+    std::cout << "segs: " << segs << " remLen: " << remLen << " size: " << segs*10 + remLen << std::endl;
 
-    //char t =
+    int size = segs * 10 + remLen;
 
-    //std::string t = algo::vote(test);
+    if(remLen > 0) {
+        size -= 10;
+    }
 
-    std::cout << algo::discrep(test, 10) << std::endl;
+    chunks = algo::vectorize(mem, segs, remLen);
 
-    std::cout << algo::vote(test, 10) << " == " << strlen(algo::vote(test, 10)) <<  std::endl;
+    std::cout << "vector size: " << chunks.size() << std::endl;
+
+    mem = algo::devectorize(chunks, remLen);
+
+    util::writeBlcok("D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\LargeTextFile.txt", (unsigned char*)mem, size);
 
     return 0;
 }
