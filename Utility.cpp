@@ -139,7 +139,7 @@ unsigned char* util::getUDP(int& ret) {
 
     ret = n;
 
-    std::cout << n << buffer[48] <<std::endl;
+    //std::cout << n << buffer[48] <<std::endl;
 
     //std::cout << "Got message: " << buffer[0] << std::endl;
 
