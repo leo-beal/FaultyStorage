@@ -44,6 +44,8 @@ namespace util{
     unsigned char* getUDP(int& ret);
 
     char* readBlock(const std::string& path, int& segs, int& remLen);
+
+    void writeBlcok(const std::string& path, unsigned char* memBlock, const int& size);
 }
 
 #endif //FAULTYDISK_UTILITY_HPP

@@ -182,3 +182,8 @@ char* util::readBlock(const std::string& path, int& segs, int& remLen) {
 
     return block;
 }
+
+void util::writeBlcok(const std::string& path, unsigned char *memBlock, const int &size) {
+    std::ofstream fileOut (path, std::ios::out | std::ios::binary);
+    fileOut.write ((char*)memBlock, size);
+}
