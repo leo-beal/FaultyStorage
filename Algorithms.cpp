@@ -5,14 +5,14 @@ std::vector <char*> algo::vectorize(char *memblock, const int &segs, const int &
     for(int x = 0; x < segs; x++){
         if(x < segs - 1) {
             vect.push_back(new char[10]);
-            memcpy(vect[x], memblock + x, 10);
+            memcpy(vect[x], memblock + x * 10, 10);
         }else{
             if(lenRem > 0){
                 vect.push_back(new char[lenRem]);
-                memcpy(vect[x], memblock + x, lenRem);
+                memcpy(vect[x], memblock + x * 10, lenRem);
             }else{
                 vect.push_back(new char[10]);
-                memcpy(vect[x], memblock + x, 10);
+                memcpy(vect[x], memblock + x * 10, 10);
             }
         }
     }
@@ -21,8 +21,13 @@ std::vector <char*> algo::vectorize(char *memblock, const int &segs, const int &
 
 char* algo::devectorize(const std::vector<char *> &vect, const int &lenRem) {
     char* memblock = new char[((vect.size() - 1) * 10) + lenRem];
-    for(int x = 0; x < vect.size(); x++){
-        memcpy(memblock + x, vect[x], strlen(vect[x]));
+    for(int x = 0; x < vect.size() - 1; x++){
+        memcpy(memblock + x * 10, vect[x], 10);
+    }
+    if(lenRem > 0){
+        memcpy(memblock + (vect.size() - 1) * 10, vect[vect.size() - 1], lenRem);
+    }else{
+        memcpy(memblock + (vect.size() - 1) * 10, vect[vect.size() - 1], 10);
     }
     return memblock;
 }
