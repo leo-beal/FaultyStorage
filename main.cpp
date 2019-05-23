@@ -92,6 +92,38 @@ char* getFiles(int segs, int lenRem){
 
 int main(int argc, char* argv[]) {
 
+    numFiles = 3;
+    int wait = 30;
+    std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
+    std::string writeTo = "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt";
+
+    for(int x = 0; x < argc; x++){
+        if(std::string(argv[x]) == "-n"){
+            try {
+                numFiles = std::stoi(std::string(argv[x+1]));
+                x++;
+            }catch(...){
+                std::cout << "Improper usage of -n. Defaulting to 3 copies." << std::endl;
+            }
+        }
+        if(std::string(argv[x]) == "-t"){
+            try{
+                wait = std::stoi(std::string(argv[x+1]));
+                x++;
+            }catch(...){
+                std::cout << "Improper usage of -t. Defaulting to 30 seconds" << std::endl;
+            }
+        }
+        if(std::string(argv[x]) == "-r"){
+            readFrom = std::string(argv[x+1]);
+            x++;
+        }
+        if(std::string(argv[x]) == "-w"){
+            writeTo = std::string(argv[x+1]);
+            x++;
+        }
+    }
+
     util::init();
 
     char* file;
