@@ -28,7 +28,12 @@ int main(){
 
     mem = algo::devectorize(chunks, remLen);
 
-    util::writeBlcok("D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\LargeTextFile.txt", (unsigned char*)mem, size);
+    size += 1;
+    char* memp = new char[size];
+    memcpy(memp, mem, size - 1);
+    memp[size - 1] = 0;
+
+    util::writeBlcok("D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\LargeTextFile", (unsigned char*)mem, size);
 
     return 0;
 }
