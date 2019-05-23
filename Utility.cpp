@@ -176,9 +176,9 @@ char* util::readBlock(const std::string& path, int& segs, int& remLen) {
     long temp = size / 10;
     if(size % 10 > 0){
         temp += 1;
-        remLen = size%10;
+        remLen = (int)size%10;
     }
-    segs = temp;
+    segs = (int)temp;
 
     return block;
 }
