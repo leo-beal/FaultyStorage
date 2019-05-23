@@ -81,13 +81,13 @@ char* getFiles(int segs, int lenRem){
 int main(int argc, char* argv[]) {
 
     //Windows:
-    //Test data string "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt"
-    //Safe zone string "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt"
+    //Test data string "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmallTextFile.txt"
+    //Safe zone string "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmallTextFile.txt"
 
     numFiles = 3;
     int wait = 30;
-    std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
-    std::string writeTo = "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt";
+    std::string readFrom;
+    std::string writeTo;
 
     for(int x = 0; x < argc; x++){
         if(std::string(argv[x]) == "-n"){
