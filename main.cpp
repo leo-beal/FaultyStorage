@@ -14,7 +14,9 @@
 #include <chrono>
 
 //set this to only import on windows. Use unistd on linux.
+#if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
+#endif
 
 #include "Utility.hpp"
 #include "Algorithms.hpp"
@@ -92,6 +94,10 @@ char* getFiles(int segs, int lenRem){
 
 int main(int argc, char* argv[]) {
 
+    //Windows:
+    //Test data string "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt"
+    //Safe zone string "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt"
+
     numFiles = 3;
     int wait = 30;
     std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
@@ -131,11 +137,9 @@ int main(int argc, char* argv[]) {
     int segs;
     int lenRem;
     int size;
-    int wait;
-    std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
-    std::string writeTo = "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt";
 
-    numFiles = 7;
+
+
 
     file = util::readBlock(readFrom, segs, lenRem);
 
@@ -147,7 +151,11 @@ int main(int argc, char* argv[]) {
 
     sendFiles(file, segs, lenRem);
 
-    sleep(15);
+    #ifdef __unix__
+    usleep(wait * 100);
+    #elif defined(_WIN32) || defined(WIN32)
+    sleep(wait);
+    #endif
 
     toWrite = getFiles(segs, lenRem);
 
