@@ -11,6 +11,7 @@
 #include <thread>
 #include <vector>
 #include <memory>
+#include <chrono>
 
 //set this to only import on windows. Use unistd on linux.
 #include <windows.h>
@@ -56,19 +57,53 @@ void sendFiles(char* memBlock, int segs, int lenRem){
     }
 }
 
+char* getFiles(int segs, int lenRem){
+    char* memBlock;
+    std::vector<std::vector<char*>*> chunkedChunks;
+    std::vector<char*> chunks;
+
+    for(int x = 0; x < segs; x++){
+        unsigned char* toSend;
+        unsigned char* ack;
+        char* parsed;
+        short len;
+        chunkedChunks.push_back(new std::vector<char*>);
+        for(int y = 0; y < numFiles; y++) {
+            toSend = util::createRead(files[y], x * 10);
+            do {
+                int ret;
+                util::sendUDP(toSend);
+                ack = util::getUDP(ret);
+            } while (!util::parseRead((char *) ack, parsed, len));
+            chunkedChunks[x]->push_back(parsed);
+        }
+        if (algo::discrep(*chunkedChunks[x], len)){
+            chunks.push_back(algo::vote(*chunkedChunks[x], len));
+        }else{
+            chunks.push_back(chunkedChunks[x]->at(0));
+        }
+        delete ack;
+    }
+
+    memBlock = algo::devectorize(chunks, lenRem);
+
+    return memBlock;
+}
+
 int main(int argc, char* argv[]) {
 
     util::init();
 
     char* file;
+    char* toWrite;
     int segs;
     int lenRem;
     int size;
     int wait;
     std::string readFrom = "D:\\cs\\cs6890\\FaultyDisk\\TestData\\SmalTextFile.txt";
-    std::string writeTo;
+    std::string writeTo = "D:\\cs\\cs6890\\FaultyDisk\\SafeZone\\SmalTextFile.txt";
 
-    numFiles = 3;
+    numFiles = 7;
 
     file = util::readBlock(readFrom, segs, lenRem);
 
@@ -79,6 +114,12 @@ int main(int argc, char* argv[]) {
     }
 
     sendFiles(file, segs, lenRem);
+
+    sleep(15);
+
+    toWrite = getFiles(segs, lenRem);
+
+    util::writeBlcok(writeTo, (unsigned char*)toWrite, size);
 
     util::end();
 
