@@ -13,9 +13,9 @@ namespace algo{
 
     char* devectorize (const std::vector<char*>& vect, const int &lenRem);
 
-    char* vote (const std::vector<unsigned char*>& vect, int dataLen);
+    char* vote (const std::vector<char*>& vect, int dataLen);
 
-    bool discrep (const std::vector<unsigned char*>& vect, int dataLen);
+    bool discrep (const std::vector<char*>& vect, int dataLen);
 }
 
 #endif //FAULTYDISK_ALGORITHMS_HPP

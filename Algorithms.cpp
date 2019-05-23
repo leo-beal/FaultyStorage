@@ -32,7 +32,7 @@ char* algo::devectorize(const std::vector<char *> &vect, const int &lenRem) {
     return memblock;
 }
 
-char* algo::vote(const std::vector<unsigned char *> &vect, int dataLen) {
+char* algo::vote(const std::vector<char *> &vect, int dataLen) {
     char* toReturn = new char[dataLen];
     std::vector<std::string> voters;
     for(int x = 0; x < vect.size(); x++){
@@ -69,12 +69,12 @@ char* algo::vote(const std::vector<unsigned char *> &vect, int dataLen) {
     return toReturn;
 }
 
-bool algo::discrep(const std::vector<unsigned char *> &vect, int dataLen) {
+bool algo::discrep(const std::vector<char *> &vect, int dataLen) {
     bool des = false;
     for(int x = 0; x < vect.size() - 1; x++){
         for(int y = 0; y < dataLen; y++){
-            unsigned char temp = vect[x][y] ^ vect[x + 1][y];
-            if((int)temp > 0){
+            char temp = vect[x][y] ^ vect[x + 1][y];
+            if((int)temp != 0){
                 des = true;
             }
         }
