@@ -1,22 +1,8 @@
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <string>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <cstring>
 #include <thread>
 #include <vector>
-#include <memory>
 #include <chrono>
-
-//set this to only import on windows. Use unistd on linux.
-#if defined(_WIN32) || defined(WIN32)
-#include <windows.h>
-#endif
 
 #include "Utility.hpp"
 #include "Algorithms.hpp"
@@ -137,10 +123,7 @@ int main(int argc, char* argv[]) {
     int segs;
     int lenRem;
     int size;
-
-
-
-
+    
     file = util::readBlock(readFrom, segs, lenRem);
 
     size = segs * 10 + lenRem;
@@ -151,11 +134,7 @@ int main(int argc, char* argv[]) {
 
     sendFiles(file, segs, lenRem);
 
-    #ifdef __unix__
-    usleep(wait * 100);
-    #elif defined(_WIN32) || defined(WIN32)
-    sleep(wait);
-    #endif
+    std::this_thread::sleep_for(std::chrono::seconds(wait));
 
     toWrite = getFiles(segs, lenRem);
 
