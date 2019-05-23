@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
     int segs;
     int lenRem;
     int size;
-    
+
     file = util::readBlock(readFrom, segs, lenRem);
 
     size = segs * 10 + lenRem;
